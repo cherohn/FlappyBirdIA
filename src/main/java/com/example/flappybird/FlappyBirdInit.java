@@ -31,7 +31,7 @@ public class FlappyBirdInit extends Application {
     private Image IMG_BG_DAY, IMG_BG_NIGHT;
     private Image IMG_BASE;
     private Image IMG_PIPE_GREEN, IMG_PIPE_RED;
-    private Image[] IMG_BIRD = new Image[3];
+    private final Image[][] BIRD_COLORS = new Image[3][]; // 0=yellow, 1=blue, 2=red
     private Image IMG_MESSAGE, IMG_GAMEOVER;
 
     // World entities
@@ -100,6 +100,12 @@ public class FlappyBirdInit extends Application {
         framesAlive = 0;
         nightMode = false;
 
+        // atribui cores aleatórias para os pássaros
+        Random rnd = new Random();
+        for (FlappyBirdInit.Bird b : ai.birds) {
+            b.colorIndex = rnd.nextInt(3); // 0 amarelo, 1 azul, 2 vermelho
+        }
+
         double startX = WINDOW_W + 50;
         for (int i = 0; i < 3; i++) {
             spawnPipeAt(startX + i * (PIPE_SPACING + 52));
@@ -120,9 +126,26 @@ public class FlappyBirdInit extends Application {
         try { IMG_BASE = new Image(getClass().getResourceAsStream("/sprites/base.png")); } catch (Exception e) { IMG_BASE = null; }
         try { IMG_PIPE_GREEN = new Image(getClass().getResourceAsStream("/sprites/pipe-green.png")); } catch (Exception e) { IMG_PIPE_GREEN = null; }
         try { IMG_PIPE_RED = new Image(getClass().getResourceAsStream("/sprites/pipe-red.png")); } catch (Exception e) { IMG_PIPE_RED = null; }
-        try { IMG_BIRD[0] = new Image(getClass().getResourceAsStream("/sprites/yellowbird-upflap.png")); } catch (Exception e) { IMG_BIRD[0] = null; }
-        try { IMG_BIRD[1] = new Image(getClass().getResourceAsStream("/sprites/yellowbird-midflap.png")); } catch (Exception e) { IMG_BIRD[1] = null; }
-        try { IMG_BIRD[2] = new Image(getClass().getResourceAsStream("/sprites/yellowbird-downflap.png")); } catch (Exception e) { IMG_BIRD[2] = null; }
+
+        // Amarelo
+        BIRD_COLORS[0] = new Image[]{
+                new Image(getClass().getResourceAsStream("/sprites/yellowbird-upflap.png")),
+                new Image(getClass().getResourceAsStream("/sprites/yellowbird-midflap.png")),
+                new Image(getClass().getResourceAsStream("/sprites/yellowbird-downflap.png"))
+        };
+        // Azul
+        BIRD_COLORS[1] = new Image[]{
+                new Image(getClass().getResourceAsStream("/sprites/bluebird-upflap.png")),
+                new Image(getClass().getResourceAsStream("/sprites/bluebird-midflap.png")),
+                new Image(getClass().getResourceAsStream("/sprites/bluebird-downflap.png"))
+        };
+        // Vermelho
+        BIRD_COLORS[2] = new Image[]{
+                new Image(getClass().getResourceAsStream("/sprites/redbird-upflap.png")),
+                new Image(getClass().getResourceAsStream("/sprites/redbird-midflap.png")),
+                new Image(getClass().getResourceAsStream("/sprites/redbird-downflap.png"))
+        };
+
         try { IMG_MESSAGE = new Image(getClass().getResourceAsStream("/sprites/message.png")); } catch (Exception e) { IMG_MESSAGE = null; }
         try { IMG_GAMEOVER = new Image(getClass().getResourceAsStream("/sprites/gameover.png")); } catch (Exception e) { IMG_GAMEOVER = null; }
     }
@@ -144,12 +167,11 @@ public class FlappyBirdInit extends Application {
 
             b.update(dt);
 
-            // Limites da tela
             double baseTop = WINDOW_H - (IMG_BASE != null ? IMG_BASE.getHeight() : 100);
 
             // Teto
             if (b.y - b.h / 2.0 <= 0) {
-                b.y = b.h / 2.0; // trava no topo
+                b.y = b.h / 2.0;
                 b.alive = false;
                 ai.markDead(i);
                 continue;
@@ -157,7 +179,7 @@ public class FlappyBirdInit extends Application {
 
             // Chão
             if (b.y + b.h / 2.0 >= baseTop) {
-                b.y = baseTop - b.h / 2.0; // trava no chão
+                b.y = baseTop - b.h / 2.0;
                 b.alive = false;
                 ai.markDead(i);
                 continue;
@@ -194,7 +216,6 @@ public class FlappyBirdInit extends Application {
             framesAlive = 0;
         }
     }
-
 
     private void render() {
         // fundo
@@ -241,7 +262,6 @@ public class FlappyBirdInit extends Application {
             if (b.alive) b.render(gc);
         }
 
-
         // HUD
         gc.setFill(Color.BLACK);
         gc.fillText("Geração: " + ai.generation, 10, 20);
@@ -279,6 +299,7 @@ public class FlappyBirdInit extends Application {
         int animIndex = 0;
         double animTimer = 0;
         public boolean alive = true;
+        int colorIndex = 0; // 0 amarelo, 1 azul, 2 vermelho
 
         Bird(double x, double y) {
             this.x = x;
@@ -290,21 +311,14 @@ public class FlappyBirdInit extends Application {
             rotation = -25;
         }
 
-
         void update(double dt) {
             vy += GRAVITY * dt;
             y += vy * dt;
 
-            // rotação natural conforme a velocidade
-            if (vy < 0) {
-                rotation = -25;
-            } else if (vy < 200) {
-                rotation = 0;
-            } else {
-                rotation = 90;
-            }
+            if (vy < 0) rotation = -25;
+            else if (vy < 200) rotation = 0;
+            else rotation = 90;
 
-            // animação
             animTimer += dt;
             if (animTimer >= 0.12) {
                 animIndex = (animIndex + 1) % 3;
@@ -312,10 +326,8 @@ public class FlappyBirdInit extends Application {
             }
         }
 
-
-
         void render(GraphicsContext gc) {
-            Image frame = IMG_BIRD[animIndex];
+            Image frame = BIRD_COLORS[colorIndex][animIndex];
             gc.save();
             gc.translate(x, y);
             gc.rotate(rotation);
@@ -337,7 +349,6 @@ public class FlappyBirdInit extends Application {
         double top() { return y - (h / 2.0); }
         double bottom() { return y + (h / 2.0); }
     }
-
 
     public class PipePair {
         double x;
@@ -385,11 +396,7 @@ public class FlappyBirdInit extends Application {
 
         private boolean rectOverlap(double x1, double y1, double w1, double h1,
                                     double x2, double y2, double w2, double h2) {
-            if (x1 + w1 <= x2) return false;
-            if (x1 >= x2 + w2) return false;
-            if (y1 + h1 <= y2) return false;
-            if (y1 >= y2 + h2) return false;
-            return true;
+            return !(x1 + w1 <= x2 || x1 >= x2 + w2 || y1 + h1 <= y2 || y1 >= y2 + h2);
         }
     }
 

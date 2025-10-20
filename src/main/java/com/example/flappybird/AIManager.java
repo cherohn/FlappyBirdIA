@@ -13,7 +13,7 @@ public class AIManager {
     public double bestFitness = 0;
     public int aliveCount = 0;
 
-    private static final int POP_SIZE = 1000;
+    private static final int POP_SIZE = 100000;
     private static final int INPUTS = 4;
     private static final int HIDDEN = 6;
     private static final int OUTPUTS = 2;
@@ -75,7 +75,6 @@ public class AIManager {
             // Decisão de flap
             // Para teste inicial, força flap se a rede neural der qualquer valor positivo
             if (out[0] > 0.5) b.flap(); // começa com mais flaps
-
 
 
         }
