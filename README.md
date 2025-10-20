@@ -126,6 +126,6 @@ MIT License © 2025 cherohn
 👤 Autor
 
 Cherohn
-🔗 GitHub
+https://github.com/cherohn
 
 💬 Projeto desenvolvido com fins educacionais e de pesquisa em Inteligência Artificial.
