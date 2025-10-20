@@ -63,8 +63,10 @@ mvn clean install
 
 # Execute o jogo
 mvn exec:java -Dexec.mainClass="main.FlappyBirdGame"
+```
+---
 
-Como funciona a IA
+🧬 Como funciona a IA
 
 A IA é baseada em um sistema de DNA -> Rede Neural -> Ação.
 Cada pássaro possui um DNA, que define os pesos da rede neural.
@@ -85,6 +87,8 @@ Após a morte de todos os pássaros, um novo conjunto (geração) é criado com 
 O fitness de cada pássaro é calculado pela pontuação obtida no jogo.
 Os melhores DNAs são cruzados e sofrem pequenas mutações, criando uma nova geração mais adaptada.
 
+---
+
 ⚙️ Parâmetros Importantes
 
 Os parâmetros de treino podem ser ajustados diretamente no código:
@@ -95,6 +99,9 @@ MUTATION_RATE	Probabilidade de mutação no DNA	0.05
 INPUTS	Quantidade de variáveis de entrada da rede neural	3
 HIDDEN	Neurônios na camada oculta	6
 OUTPUTS	Ações possíveis (pular ou não)	1
+
+---
+
 🧪 Testando e Visualizando
 
 Durante a execução, você poderá visualizar o desempenho da população:
@@ -105,6 +112,8 @@ A cada geração, o score médio tende a aumentar.
 
 É possível observar a evolução da IA em tempo real.
 
+---
+
 📜 Licença
 
 Este projeto é distribuído sob a licença MIT.
@@ -112,10 +121,11 @@ Sinta-se livre para usar, estudar e modificar conforme desejar.
 
 MIT License © 2025 cherohn
 
+---
+
 👤 Autor
 
 Cherohn
 🔗 GitHub
 
 💬 Projeto desenvolvido com fins educacionais e de pesquisa em Inteligência Artificial.
-
