@@ -94,10 +94,15 @@ Os melhores DNAs são cruzados e sofrem pequenas mutações, criando uma nova ge
 Os parâmetros de treino podem ser ajustados diretamente no código:
 
 Parâmetro	Descrição	Padrão
+
 POPULATION_SIZE	Quantidade de pássaros por geração	100
+
 MUTATION_RATE	Probabilidade de mutação no DNA	0.05
+
 INPUTS	Quantidade de variáveis de entrada da rede neural	3
+
 HIDDEN	Neurônios na camada oculta	6
+
 OUTPUTS	Ações possíveis (pular ou não)	1
 
 ---
